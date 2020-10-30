@@ -1,6 +1,6 @@
 {
   "name": "@editorjs/list",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "keywords": [
     "codex editor",
     "list",
@@ -10,7 +10,7 @@
   ],
   "description": "List Tool for Editor.js",
   "license": "MIT",
-  "repository": "https://github.com/editor-js/list",
+  "repository": "https://github.com/4rw44z/editorJs-list",
   "main": "./dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
