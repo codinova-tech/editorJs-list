@@ -44,7 +44,7 @@ Add the List Tool to the `tools` property of the Editor.js initial config.
 
 ```javascript
 import EditorJS from '@editorjs/editorjs';
-import List from '@editorjs/list';
+import List from 'editorjs-list';
 
 var editor = EditorJS({
   // ...
