@@ -13,16 +13,16 @@ This Tool for the [Editor.js](https://editorjs.io) allows you to add ordered or 
 Get the package
 
 ```shell
-npm i --save @editorjs/list
+npm i --save editorjs-list
 ```
 ```shell
-yarn add @editorjs/list
+yarn add editorjs-list
 ```
 
 Include module at your application
 
 ```javascript
-import List from '@editorjs/list';
+import List from 'editorjs-list';
 ```
 
 ### Download to your project's source dir
