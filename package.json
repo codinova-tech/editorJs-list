@@ -1,6 +1,6 @@
 {
-  "name": "@editorjs/list-updated",
-  "version": "3.0.0",
+  "name": "editorjs-list",
+  "version": "2.0.0",
   "keywords": [
     "codex editor",
     "list",
@@ -17,8 +17,8 @@
     "build:dev": "webpack --mode development --watch"
   },
   "author": {
-    "name": "CodeX",
-    "email": "team@codex.so"
+    "name": "arwaz",
+    "email": "arwaazness@gmail.com"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
