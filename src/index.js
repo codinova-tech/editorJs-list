@@ -495,7 +495,7 @@ class List {
   pasteHandler(element) {
     const { tagName: tag } = element;
     let style;
-
+    
     switch (tag) {
       case 'OL':
         style = 'ordered';
@@ -514,12 +514,18 @@ class List {
       data.items = [ element.innerHTML ];
     } else {
       const items = Array.from(element.childNodes);
-
       data.items = items
-        .map((li) => li.innerHTML)
-        .filter((item) => !!item.trim());
-    }
-
+        .map((li) => {
+          if(li.nodeName === 'LI') {
+            return li.innerHTML
+          }
+          else if (['UL', 'OL'].indexOf(li.nodeName) > -1) {
+                  const innerChildItems = Array.from(li.childNodes);
+                  return innerChildItems.map((obj) => obj.innerHTML);
+                }
+          return;
+        });
+      }
     return data;
   }
 }
