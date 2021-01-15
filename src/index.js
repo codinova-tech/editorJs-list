@@ -24,6 +24,15 @@ class List {
   }
 
   /**
+   * Notify core that read-only mode is supported
+   *
+   * @returns {boolean}
+   */
+  static get isReadOnlySupported() {
+    return true;
+  }
+
+  /**
    * Get Tool toolbox settings
    * icon - Tool icon's SVG
    * title - title to show in toolbox
@@ -44,8 +53,9 @@ class List {
    * @param {ListData} params.data - previously saved data
    * @param {object} params.config - user config for Tool
    * @param {object} params.api - Editor.js API
+   * @param {boolean} params.readOnly - read-only mode flag
    */
-  constructor({ data, config, api }) {
+  constructor({ data, config, api, readOnly }) {
     /**
      * HTML nodes
      *
@@ -56,6 +66,7 @@ class List {
     };
 
     this.api = api;
+    this.readOnly = readOnly;
 
     this.settings = [
       {
@@ -95,7 +106,7 @@ class List {
     const style = this._data.style === 'ordered' ? this.CSS.wrapperOrdered : this.CSS.wrapperUnordered;
 
     this._elements.wrapper = this._make('ul', [this.CSS.baseBlock, this.CSS.wrapper, style], {
-      contentEditable: true,
+      contentEditable: !this.readOnly,
     });
 
     // fill with data
@@ -105,22 +116,24 @@ class List {
       this._elements.wrapper.appendChild(this._make('li', this.CSS.item));
     }
 
-    // detect keydown on the last item to escape List
-    this._elements.wrapper.addEventListener('keydown', (event) => {
-      const [ENTER, BACKSPACE, TAB] = [13, 8, 9]; // key codes
+    if (!this.readOnly) {
+      // detect keydown on the last item to escape List
+      this._elements.wrapper.addEventListener('keydown', (event) => {
+        const [ENTER, BACKSPACE, TAB] = [13, 8, 9]; // key codes
 
-      switch (event.keyCode) {
-        case ENTER:
-          this.getOutofList(event);
-          break;
-        case BACKSPACE:
-          this.backspace(event);
-          break;
-        case TAB:
-          this.addTab(event);
-          break;
-      }
-    }, false);
+        switch (event.keyCode) {
+          case ENTER:
+            this.getOutofList(event);
+            break;
+          case BACKSPACE:
+            this.backspace(event);
+            break;
+          case TAB:
+            this.addTab(event);
+            break;
+        }
+      }, false);
+    }
 
     return this._elements.wrapper;
   }
@@ -358,7 +371,7 @@ class List {
   createAllElm(lidata){
     const style = this._data.style === 'ordered' ? this.CSS.wrapperOrdered : this.CSS.wrapperUnordered;
     const ulElem = this._make('ul', [this.CSS.baseBlock, this.CSS.wrapper, style], {
-      contentEditable: true,
+      contentEditable: !this.readOnly,
     });
 
     lidata.forEach((item) => {
@@ -452,7 +465,7 @@ class List {
 
     const style = this._data.style === 'ordered' ? this.CSS.wrapperOrdered : this.CSS.wrapperUnordered;
     let ol = this._make('ul', [this.CSS.baseBlock, this.CSS.wrapper, style], {
-      contentEditable: true,
+      contentEditable: !this.readOnly,
     });
     
     if (this.currentItem.nextSibling != null) {
