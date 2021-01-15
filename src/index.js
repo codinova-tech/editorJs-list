@@ -687,15 +687,27 @@ class List {
       data.items = [element.innerHTML];
     } else {
       const items = Array.from(element.childNodes);
-      data.items = items.map((li) => {
+      data.items = items.reduce((acc,li) => {
         if (li.nodeName === "LI") {
-          return li.innerHTML;
+          return [...acc,li.innerHTML];
         } else if (["UL", "OL"].indexOf(li.nodeName) > -1) {
           const innerChildItems = Array.from(li.childNodes);
-          return innerChildItems.map((obj) => obj.innerHTML);
+          const resultFromChild= innerChildItems.reduce((accumulatedValue, obj) => {
+            if(obj.nodeName === "LI") {
+              return [...accumulatedValue, obj.innerHTML];
+            } else if(["UL", "OL"].indexOf(obj.nodeName) > -1) {
+                const secondLevelChildItems = Array.from(obj.childNodes);
+                const resultFromSecondLevelChild =  secondLevelChildItems.map((itm) => {
+                    if(itm.nodeName === 'LI') return itm.innerHTML;
+              });
+              return [...accumulatedValue, resultFromSecondLevelChild]
+            }
+            return accumulatedValue;
+          }, []);
+          return [...acc, resultFromChild]
         }
-        return;
-      });
+        return acc;
+      },[]);
     }
     return data;
   }
