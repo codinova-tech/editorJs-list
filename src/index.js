@@ -12,6 +12,8 @@ require("./index.css").toString();
 /**
  * List Tool for the Editor.js 2.0
  */
+const traverseThroughNodes = items => filterListItems(items).map(item=>item.nodeName === "LI" ? item.innerHTML: traverseThroughNodes([...item.childNodes]));
+const filterListItems = items => items.filter(item => ["LI","UL", "OL"].includes(item.nodeName));
 class List {
   /**
    * Allow to use native Enter behaviour
@@ -665,52 +667,29 @@ class List {
    * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} element
    * @returns {ListData}
    */
-  pasteHandler(element) {
-    const { tagName: tag } = element;
-    let style;
-
-    switch (tag) {
-      case "OL":
-        style = "ordered";
-        break;
-      case "UL":
-      case "LI":
-        style = "unordered";
-    }
-
-    const data = {
-      style,
-      items: [],
-    };
-
-    if (tag === "LI") {
-      data.items = [element.innerHTML];
-    } else {
-      const items = Array.from(element.childNodes);
-      data.items = items.reduce((acc,li) => {
-        if (li.nodeName === "LI") {
-          return [...acc,li.innerHTML];
-        } else if (["UL", "OL"].indexOf(li.nodeName) > -1) {
-          const innerChildItems = Array.from(li.childNodes);
-          const resultFromChild= innerChildItems.reduce((accumulatedValue, obj) => {
-            if(obj.nodeName === "LI") {
-              return [...accumulatedValue, obj.innerHTML];
-            } else if(["UL", "OL"].indexOf(obj.nodeName) > -1) {
-                const secondLevelChildItems = Array.from(obj.childNodes);
-                const resultFromSecondLevelChild =  secondLevelChildItems.map((itm) => {
-                    if(itm.nodeName === 'LI') return itm.innerHTML;
-              });
-              return [...accumulatedValue, resultFromSecondLevelChild]
-            }
-            return accumulatedValue;
-          }, []);
-          return [...acc, resultFromChild]
-        }
-        return acc;
-      },[]);
-    }
-    return data;
+pasteHandler(element) {
+  const { tagName: tag } = element;
+  let style;
+  switch (tag) {
+    case "OL":
+      style = "ordered";
+      break;
+    case "UL":
+    case "LI":
+      style = "unordered";
   }
+  const data = {
+    style,
+    items: [],
+  };
+  if (tag === "LI") {
+    data.items = [element.innerHTML];
+  } else {
+    const newItems  = traverseThroughNodes([...element.childNodes]);
+    data.items = newItems;
+  }
+  return data;
+}
 }
 
 module.exports = List;
