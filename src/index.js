@@ -109,7 +109,6 @@ class List {
 
     this.data = data;
     this.selectedItem = null;
-    this.config = config;
   }
 
   /**
@@ -270,7 +269,7 @@ class List {
       if (this._data.style === item.name) {
         itemEl.classList.add(this.CSS.settingsButtonActive);
       }
-      this.setEndOfContentEditable(this.selectedItem);
+      this.setEndOfContentEditable(this.selectedItem); // Set cursor on selectedItem
       wrapper.appendChild(itemEl);
     });
 
