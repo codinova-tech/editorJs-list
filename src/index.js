@@ -607,7 +607,7 @@ class List {
         currentSelectedItem.previousSibling.remove();
         this.firstItem = false;
       }
-    } else if(this.currentItem.parentNode.parentNode.tagName === 'UL') {
+    } else if (this.currentItem.parentNode.parentNode.tagName === "UL") {
       this.currentItem.parentNode.parentNode.appendChild(currentSelectedItem);
       currentSelectedItem.previousSibling.remove();
     } else {
@@ -667,29 +667,29 @@ class List {
    * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} element
    * @returns {ListData}
    */
-pasteHandler(element) {
-  const { tagName: tag } = element;
-  let style;
-  switch (tag) {
-    case "OL":
-      style = "ordered";
-      break;
-    case "UL":
-    case "LI":
-      style = "unordered";
+  pasteHandler(element) {
+    const { tagName: tag } = element;
+    let style;
+    switch (tag) {
+      case "OL":
+        style = "ordered";
+        break;
+      case "UL":
+      case "LI":
+        style = "unordered";
+    }
+    const data = {
+      style,
+      items: [],
+    };
+    if (tag === "LI") {
+      data.items = [element.innerHTML];
+    } else {
+      const newItems = traverseThroughNodes([...element.childNodes]);
+      data.items = newItems;
+    }
+    return data;
   }
-  const data = {
-    style,
-    items: [],
-  };
-  if (tag === "LI") {
-    data.items = [element.innerHTML];
-  } else {
-    const newItems  = traverseThroughNodes([...element.childNodes]);
-    data.items = newItems;
-  }
-  return data;
-}
 }
 
 module.exports = List;
