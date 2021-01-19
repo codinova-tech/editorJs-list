@@ -306,7 +306,7 @@ class List {
    * @param {string} style - 'ordered'|'unordered'
    */
   toggleTune(style) {
-    if (listTypes.contains(style)) {
+    if (listTypes.includes(style)) {
       this._elements.wrapper.classList.toggle(
         this.CSS.wrapperOrdered,
         style === "ordered"
