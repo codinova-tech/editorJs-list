@@ -12,8 +12,14 @@ require("./index.css").toString();
 /**
  * List Tool for the Editor.js 2.0
  */
-const traverseThroughNodes = items => filterListItems(items).map(item=>item.nodeName === "LI" ? item.innerHTML: traverseThroughNodes([...item.childNodes]));
-const filterListItems = items => items.filter(item => ["LI","UL", "OL"].includes(item.nodeName));
+const traverseThroughNodes = (items) =>
+  filterListItems(items).map((item) =>
+    item.nodeName === "LI"
+      ? item.innerHTML
+      : traverseThroughNodes([...item.childNodes])
+  );
+const filterListItems = (items) =>
+  items.filter((item) => ["LI", "UL", "OL"].includes(item.nodeName));
 class List {
   /**
    * Allow to use native Enter behaviour
@@ -78,15 +84,17 @@ class List {
       {
         name: "removeTab",
         title: this.api.i18n.t("Remove Tab"),
-        icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 17h10v-2H11v2zm-8-5l4 4V8l-4 4zm0 9h18v-2H3v2zM3 3v2h18V3H3zm8 6h10V7H11v2zm0 4h10v-2H11v2z"/></svg>',
-        default: false
+        icon:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 17h10v-2H11v2zm-8-5l4 4V8l-4 4zm0 9h18v-2H3v2zM3 3v2h18V3H3zm8 6h10V7H11v2zm0 4h10v-2H11v2z"/></svg>',
+        default: false,
       },
       {
         name: "addTab",
         title: this.api.i18n.t("Add Tab"),
-        icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 21h18v-2H3v2zM3 8v8l4-4-4-4zm8 9h10v-2H11v2zM3 3v2h18V3H3zm8 6h10V7H11v2zm0 4h10v-2H11v2z"/></svg>',
-        default: false
-      }
+        icon:
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 21h18v-2H3v2zM3 8v8l4-4-4-4zm8 9h10v-2H11v2zM3 3v2h18V3H3zm8 6h10V7H11v2zm0 4h10v-2H11v2z"/></svg>',
+        default: false,
+      },
     ];
 
     /**
@@ -103,7 +111,6 @@ class List {
     this.selectedItem = null;
     this.config = config;
   }
-  
 
   /**
    * Returns list tag with items
@@ -160,10 +167,13 @@ class List {
       },
       false
     );
-    this._elements.wrapper.addEventListener('click', (event) => {
+    this._elements.wrapper.addEventListener("click", (event) => {
       this.selectedItem = window.getSelection().anchorNode;
-      this.selectedItem = this.selectedItem.parentElement.nodeName === 'LI' ? this.selectedItem.parentElement : this.selectedItem.parentElement.parentElement; 
-    })
+      this.selectedItem =
+        this.selectedItem.parentElement.nodeName === "LI"
+          ? this.selectedItem.parentElement
+          : this.selectedItem.parentElement.parentElement;
+    });
     return this._elements.wrapper;
   }
 
@@ -247,10 +257,9 @@ class List {
         );
 
         // mark active
-        if(item.name === 'unordered' || item.name === 'ordered') {
+        if (item.name === "unordered" || item.name === "ordered") {
           itemEl.classList.toggle(this.CSS.settingsButtonActive);
         }
-        
       });
 
       this.api.tooltip.onHover(itemEl, item.title, {
@@ -296,7 +305,7 @@ class List {
    * @param {string} style - 'ordered'|'unordered'
    */
   toggleTune(style) {
-    if(style ==='ordered' || style ==='unordered') {
+    if (style === "ordered" || style === "unordered") {
       this._elements.wrapper.classList.toggle(
         this.CSS.wrapperOrdered,
         style === "ordered"
@@ -306,7 +315,7 @@ class List {
         style === "unordered"
       );
       const items = this._elements.wrapper.querySelectorAll("ul");
-  
+
       for (let i = 0; i < items.length; i++) {
         items[i].classList.toggle(this.CSS.wrapperOrdered, style === "ordered");
         items[i].classList.toggle(
@@ -315,13 +324,11 @@ class List {
         );
       }
       this._data.style = style;
-    }
-    else if(style === 'addTab') {
+    } else if (style === "addTab") {
       this.setEndOfContentEditable(this.selectedItem);
       this.addTab();
-    }
-    else if(style === 'removeTab') {
-      if(this.selectedItem.parentNode.parentNode.tagName === "UL") {
+    } else if (style === "removeTab") {
+      if (this.selectedItem.parentNode.parentNode.tagName === "UL") {
         this.setEndOfContentEditable(this.selectedItem);
         this.removeTab();
       }
@@ -421,7 +428,7 @@ class List {
 
     return el;
   }
-  
+
   createAllElm(lidata) {
     const style =
       this._data.style === "ordered"
@@ -590,7 +597,7 @@ class List {
       this.setEndOfContentEditable(currentSelectedItem),
       false
     );
-    if(event) {
+    if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -642,11 +649,10 @@ class List {
         currentSelectedItem.previousSibling.remove();
         this.firstItem = false;
       }
-    } else if(this.currentItem.parentNode.parentNode.tagName === 'UL') {
+    } else if (this.currentItem.parentNode.parentNode.tagName === "UL") {
       this.currentItem.parentNode.parentNode.appendChild(currentSelectedItem);
       currentSelectedItem.previousSibling.remove();
-    }
-     else {
+    } else {
       this.currentItem.parentNode.parentNode.appendChild(currentSelectedItem);
     }
     currentSelectedItem.focus();
@@ -655,7 +661,7 @@ class List {
       this.setEndOfContentEditable(currentSelectedItem),
       false
     );
-    if(event) {
+    if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -705,29 +711,29 @@ class List {
    * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} element
    * @returns {ListData}
    */
-pasteHandler(element) {
-  const { tagName: tag } = element;
-  let style;
-  switch (tag) {
-    case "OL":
-      style = "ordered";
-      break;
-    case "UL":
-    case "LI":
-      style = "unordered";
+  pasteHandler(element) {
+    const { tagName: tag } = element;
+    let style;
+    switch (tag) {
+      case "OL":
+        style = "ordered";
+        break;
+      case "UL":
+      case "LI":
+        style = "unordered";
+    }
+    const data = {
+      style,
+      items: [],
+    };
+    if (tag === "LI") {
+      data.items = [element.innerHTML];
+    } else {
+      const newItems = traverseThroughNodes([...element.childNodes]);
+      data.items = newItems;
+    }
+    return data;
   }
-  const data = {
-    style,
-    items: [],
-  };
-  if (tag === "LI") {
-    data.items = [element.innerHTML];
-  } else {
-    const newItems  = traverseThroughNodes([...element.childNodes]);
-    data.items = newItems;
-  }
-  return data;
-}
 }
 
 module.exports = List;
