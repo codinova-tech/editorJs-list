@@ -24,3 +24,9 @@
         }
     }
 }
+.cdx-settings-button:nth-child(n+4) {
+    margin-top: 0;
+}
+.cdx-settings-button:not(:nth-child(3n+3)) {
+    margin-right: 0;
+}
