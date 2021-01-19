@@ -20,6 +20,8 @@ const traverseThroughNodes = (items) =>
   );
 const filterListItems = (items) =>
   items.filter((item) => ["LI", "UL", "OL"].includes(item.nodeName));
+
+const listTypes = ["ordered", "unordered"];
 class List {
   /**
    * Allow to use native Enter behaviour
@@ -256,7 +258,7 @@ class List {
         );
 
         // mark active
-        if (item.name === "unordered" || item.name === "ordered") {
+        if (listTypes.includes(item.name)) {
           itemEl.classList.toggle(this.CSS.settingsButtonActive);
         }
       });
@@ -304,7 +306,7 @@ class List {
    * @param {string} style - 'ordered'|'unordered'
    */
   toggleTune(style) {
-    if (style === "ordered" || style === "unordered") {
+    if (listTypes.contains(style)) {
       this._elements.wrapper.classList.toggle(
         this.CSS.wrapperOrdered,
         style === "ordered"
