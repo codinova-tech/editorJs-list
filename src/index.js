@@ -12,6 +12,8 @@ require("./index.css").toString();
 /**
  * List Tool for the Editor.js 2.0
  */
+const traverseThroughNodes = items => filterListItems(items).map(item=>item.nodeName === "LI" ? item.innerHTML: traverseThroughNodes([...item.childNodes]));
+const filterListItems = items => items.filter(item => ["LI","UL", "OL"].includes(item.nodeName));
 class List {
   /**
    * Allow to use native Enter behaviour
@@ -605,7 +607,7 @@ class List {
         currentSelectedItem.previousSibling.remove();
         this.firstItem = false;
       }
-    } else if(this.currentItem.parentNode.parentNode.tagName === 'UL') {
+    } else if (this.currentItem.parentNode.parentNode.tagName === "UL") {
       this.currentItem.parentNode.parentNode.appendChild(currentSelectedItem);
       currentSelectedItem.previousSibling.remove();
     } else {
@@ -668,7 +670,6 @@ class List {
   pasteHandler(element) {
     const { tagName: tag } = element;
     let style;
-
     switch (tag) {
       case "OL":
         style = "ordered";
@@ -677,25 +678,15 @@ class List {
       case "LI":
         style = "unordered";
     }
-
     const data = {
       style,
       items: [],
     };
-
     if (tag === "LI") {
       data.items = [element.innerHTML];
     } else {
-      const items = Array.from(element.childNodes);
-      data.items = items.map((li) => {
-        if (li.nodeName === "LI") {
-          return li.innerHTML;
-        } else if (["UL", "OL"].indexOf(li.nodeName) > -1) {
-          const innerChildItems = Array.from(li.childNodes);
-          return innerChildItems.map((obj) => obj.innerHTML);
-        }
-        return;
-      });
+      const newItems = traverseThroughNodes([...element.childNodes]);
+      data.items = newItems;
     }
     return data;
   }
